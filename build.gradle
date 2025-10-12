@@ -21,11 +21,11 @@ subprojects {
             compileSdk = 33
             defaultConfig {
                 minSdk = 23
-                targetSdk = 33
+                targetSdk = 36
             }
             compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
+                sourceCompatibility = JavaVersion.VERSION_21
+                targetCompatibility = JavaVersion.VERSION_21
             }
             buildFeatures {
                 aidl true
@@ -41,7 +41,7 @@ tasks.register('clean', Delete) {
 
 ext {
     minSdkVersion = 23
-    targetSdkVersion = 33
+    targetSdkVersion = 36
     api_min_sdk = 23
-    api_target_sdk = 33
+    api_target_sdk = 36
 }
