@@ -62,21 +62,6 @@ jobs:
           ccache -o max_size=2G
           ccache -o hash_dir=false
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          log-accepted-android-sdk-licenses: 'false'
-          packages: ''
-
-      - name: Setup Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
-        with:
-          version: 1.12.1
-
-      - name: Remove Android's cmake
-        shell: bash
-        run: rm -rf $ANDROID_HOME/cmake
-
       - name: Build with Gradle
         run: |
           mkdir -p ~/.gradle/wrapper
