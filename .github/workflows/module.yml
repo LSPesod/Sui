@@ -1,6 +1,7 @@
 name: Module
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
