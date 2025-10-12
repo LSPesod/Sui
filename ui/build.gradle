@@ -104,7 +104,7 @@ afterEvaluate {
                             '--resources-config-path', 'aapt2-resources.cfg',
                             '--resource-path-shortening-map', map,
                             '-o', optimized, zip
-                    ignoreExitValue false
+                    ignoreExitValue true
                 }
                 if (cmd.exitValue == 0) {
                     delete(zip)
