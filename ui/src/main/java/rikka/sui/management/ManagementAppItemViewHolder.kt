@@ -65,7 +65,7 @@ class ManagementAppItemViewHolder(private val binding: ManagementAppItemBinding)
 
     private inline val packageName get() = data.packageInfo.packageName
     private inline val ai get() = data.packageInfo.applicationInfo
-    private inline val uid get() = ai.uid
+    private inline val uid get() = ai?.uid
 
     private var loadIconJob: Job? = null
 
@@ -139,7 +139,7 @@ class ManagementAppItemViewHolder(private val binding: ManagementAppItemBinding)
             }
             try {
                 BridgeServiceClient.getService()
-                    .updateFlagsForUid(data.packageInfo.applicationInfo.uid, SuiConfig.MASK_PERMISSION, newValue)
+                    .updateFlagsForUid(data.packageInfo.applicationInfo?.uid, SuiConfig.MASK_PERMISSION, newValue)
             } catch (e: Throwable) {
                 Log.e("SuiSettings", "updateFlagsForUid", e)
                 return
@@ -160,16 +160,16 @@ class ManagementAppItemViewHolder(private val binding: ManagementAppItemBinding)
         val pm = itemView.context.packageManager
         val userId = UserHandleCompat.getUserId(uid)
 
-        icon.setImageDrawable(ai.loadIcon(pm))
+        icon.setImageDrawable(ai?.loadIcon(pm))
 
-        loadIconJob = AppIconCache.loadIconBitmapAsync(context, ai, ai.uid / 100000, icon)
+        loadIconJob = AppIconCache.loadIconBitmapAsync(context, ai, ai?.uid / 100000, icon)
 
         name.text = if (userId != UserHandleCompat.myUserId()) {
-            "${ai.loadLabel(pm)} - ($userId)"
+            "${ai?.loadLabel(pm)} - ($userId)"
         } else {
-            ai.loadLabel(pm)
+            ai?.loadLabel(pm)
         }
-        pkg.text = ai.packageName
+        pkg.text = ai?.packageName
 
         spinner.adapter = optionsAdapter
         spinner.onItemSelectedListener = onItemSelectedListener
