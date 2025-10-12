@@ -84,7 +84,7 @@ dependencies {
 
 def outDir = file("$rootDir/out")
 
-afterEvaluate {
+project.afterEvaluate {
     def isIDE = properties.containsKey('android.injected.invoked.from.ide')
     if (isIDE) {
         println("Invoked from IDE")
@@ -138,7 +138,7 @@ afterEvaluate {
                         version    : moduleVersion,
                         versionCode: moduleVersionCode.toString(),
                         author     : moduleAuthor,
-                        description: moduleDescription + " requires Zygisk enabled. DO NOT add SystemUI and Settings to DenyList."
+                        description: moduleDescription + " requires Zygisk enabled. DO NOT add SystemUI and Settings to DenyList.",
                         updateJson : "https://rikkaapps.github.io/release/sui_zygisk.json",
                 ])
                 filter(FixCrLfFilter.class,
