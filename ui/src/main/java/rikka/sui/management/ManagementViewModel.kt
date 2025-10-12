@@ -60,7 +60,9 @@ class ManagementViewModel : ViewModel() {
             try {
                 val pm = context.packageManager
                 val result = BridgeServiceClient.getApplications(-1 /* ALL */).apply {
-                    forEach { it.label = it.packageInfo.applicationInfo?.loadLabel(pm) }
+                    forEach { 
+                        it.label = it.packageInfo.applicationInfo?.loadLabel(pm)?.toString() ?: ""
+                    }
                 }
 
                 fullList.clear()

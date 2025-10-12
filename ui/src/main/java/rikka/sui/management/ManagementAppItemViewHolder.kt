@@ -65,7 +65,7 @@ class ManagementAppItemViewHolder(private val binding: ManagementAppItemBinding)
 
     private inline val packageName get() = data.packageInfo.packageName
     private inline val ai get() = data.packageInfo.applicationInfo
-    private inline val uid get() = ai?.uid
+    private inline val uid get() = ai?.uid ?: 0
 
     private var loadIconJob: Job? = null
 
@@ -138,8 +138,10 @@ class ManagementAppItemViewHolder(private val binding: ManagementAppItemBinding)
                 else -> 0
             }
             try {
-                BridgeServiceClient.getService()
-                    .updateFlagsForUid(data.packageInfo.applicationInfo?.uid, SuiConfig.MASK_PERMISSION, newValue)
+                data.packageInfo.applicationInfo?.uid?.let { uid ->
+                    BridgeServiceClient.getService()
+                        .updateFlagsForUid(uid, SuiConfig.MASK_PERMISSION, newValue)
+                }
             } catch (e: Throwable) {
                 Log.e("SuiSettings", "updateFlagsForUid", e)
                 return
@@ -160,16 +162,19 @@ class ManagementAppItemViewHolder(private val binding: ManagementAppItemBinding)
         val pm = itemView.context.packageManager
         val userId = UserHandleCompat.getUserId(uid)
 
-        icon.setImageDrawable(ai?.loadIcon(pm))
+                icon.setImageDrawable(data.packageInfo.applicationInfo?.loadIcon(pm))
 
-        loadIconJob = AppIconCache.loadIconBitmapAsync(context, ai, ai?.uid / 100000, icon)
+        data.packageInfo.applicationInfo?.let { appInfo ->
+            val userId = appInfo.uid / 100000
+            loadIconJob = AppIconCache.loadIconBitmapAsync(context, appInfo, userId, icon)
+        }
 
         name.text = if (userId != UserHandleCompat.myUserId()) {
-            "${ai?.loadLabel(pm)} - ($userId)"
+            "${data.packageInfo.applicationInfo?.loadLabel(pm)} - ($userId)"
         } else {
-            ai?.loadLabel(pm)
+            data.packageInfo.applicationInfo?.loadLabel(pm)
         }
-        pkg.text = ai?.packageName
+        pkg.text = ai?.packageName ?: ""
 
         spinner.adapter = optionsAdapter
         spinner.onItemSelectedListener = onItemSelectedListener
