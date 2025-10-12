@@ -24,7 +24,6 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${LINKER_FLAGS}")
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${LINKER_FLAGS}")
 
 find_package(cxx REQUIRED CONFIG)
-find_package(riru REQUIRED CONFIG)
 find_package(nativehelper REQUIRED CONFIG)
 
 include_directories(".")
@@ -42,13 +41,7 @@ add_library(util STATIC
         util/socket.cpp)
 target_link_libraries(util cxx::cxx log nativehelper::nativehelper_header_only)
 
-if (FLAVOR STREQUAL "riru")
-    set(CORE_MAIN_SOURCE "main_riru.cpp")
-    add_definitions(-DRIRU_MODULE)
-    add_definitions(-DRIRU_MODULE_API_VERSION=${RIRU_MODULE_API_VERSION})
-    add_definitions(-DRIRU_MODULE_VERSION=${RIRU_MODULE_VERSION})
-    add_definitions(-DRIRU_MODULE_VERSION_NAME=${RIRU_MODULE_VERSION_NAME})
-elseif (FLAVOR STREQUAL "zygisk")
+if (FLAVOR STREQUAL "zygisk")
     set(CORE_MAIN_SOURCE "main_zygisk.cpp")
     add_definitions(-DZYGISK_MODULE_ID=${ZYGISK_MODULE_ID})
 else ()
@@ -63,11 +56,11 @@ add_library(sui SHARED
         core/bridge_service.cpp
         core/manager_process.cpp
         core/settings_process.cpp)
-target_link_libraries(sui util cxx::cxx log riru::riru nativehelper::nativehelper_header_only)
+target_link_libraries(sui util cxx::cxx log nativehelper::nativehelper_header_only)
 set_target_properties(sui PROPERTIES LINK_FLAGS_RELEASE -s)
 
 add_executable(libmain.so main/main.cpp)
-target_link_libraries(libmain.so util cxx::cxx log riru::riru nativehelper::nativehelper_header_only)
+target_link_libraries(libmain.so util cxx::cxx log nativehelper::nativehelper_header_only)
 set_target_properties(libmain.so PROPERTIES LINK_FLAGS_RELEASE -s)
 
 add_executable(libadbd_wrapper.so

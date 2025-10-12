@@ -4,12 +4,7 @@ MODULE_ID=$(basename "$MODDIR")
 FLAVOR=@FLAVOR@
 
 if [ "$ZYGISK_ENABLED" = false ] && [ "$FLAVOR" = "zygisk" ]; then
-  log -p w -t "Sui" "Zygisk is disabled, skip zygisk-flavor script"
-  exit 1
-fi
-
-if [ "$ZYGISK_ENABLED" = true ] && [ "$FLAVOR" = "riru" ]; then
-  log -p w -t "Sui" "Zygisk is enabled, skip riru-flavor script"
+  log -p w -t "Sui" "Zygisk is disabled, please enable Zygisk"
   exit 1
 fi
 

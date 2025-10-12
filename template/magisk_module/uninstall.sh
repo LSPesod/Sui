@@ -8,10 +8,4 @@ uninstall() {
   rm -rf "/data/adb/sui"
 }
 
-if [ -d "$MODULES/riru_sui" ] && [ -d "$MODULES/zygisk_sui" ]; then
-  if [ -f "$MODULES/riru_sui/remove" ] && [ -f "$MODULES/zygisk_sui/remove" ]; then
-    uninstall
-  fi
-else
-  uninstall
-fi
+uninstall

@@ -42,19 +42,6 @@ android {
     }
     flavorDimensions "version"
     productFlavors {
-        riru {
-            dimension "version"
-            externalNativeBuild {
-                cmake {
-                    arguments "-DRIRU_MODULE_API_VERSION=$moduleRiruApiVersion",
-                            "-DRIRU_MODULE_VERSION=$moduleVersionCode",
-                            "-DRIRU_MODULE_VERSION_NAME:STRING=\"$moduleVersion\"",
-                            "-DFLAVOR=riru",
-                            "-DANDROID_STL=none"
-
-                }
-            }
-        }
         zygisk {
             dimension "version"
             externalNativeBuild {
@@ -78,7 +65,6 @@ android {
 dependencies {
     implementation libs.refine.runtime
 
-    implementation 'dev.rikka.ndk:riru:26.0.0'
     implementation 'dev.rikka.ndk.thirdparty:cxx:1.2.0'
     implementation 'dev.rikka.ndk.thirdparty:nativehelper:1.0.1'
     implementation 'dev.rikka.rikkax.parcelablelist:parcelablelist:2.0.0'
@@ -126,20 +112,7 @@ afterEvaluate {
 
             into magiskDir
             from(templatePath) {
-                exclude 'riru.sh', 'customize.sh', 'post-fs-data.sh', 'module.prop'
-            }
-            if (flavorLowered == 'riru') {
-                from(templatePath) {
-                    include 'riru.sh'
-                    filter(ReplaceTokens.class, tokens: [
-                            "RIRU_MODULE_LIB_NAME"             : moduleLibraryName,
-                            "RIRU_MODULE_API_VERSION"          : moduleRiruApiVersion.toString(),
-                            "RIRU_MODULE_MIN_API_VERSION"      : moduleMinRiruApiVersion.toString(),
-                            "RIRU_MODULE_MIN_RIRU_VERSION_NAME": moduleMinRiruVersionName,
-                    ])
-                    filter(FixCrLfFilter.class,
-                            eol: FixCrLfFilter.CrLf.newInstance("lf"))
-                }
+                exclude 'customize.sh', 'post-fs-data.sh', 'module.prop'
             }
             from(templatePath) {
                 include 'customize.sh'
@@ -160,17 +133,13 @@ afterEvaluate {
             from(templatePath) {
                 include 'module.prop'
                 expand([
-                        id         : (flavorLowered == "zygisk") ? zygiskModuleId : riruModuleId,
+                        id         : zygiskModuleId,
                         name       : flavorCapped + " - " + moduleName,
                         version    : moduleVersion,
                         versionCode: moduleVersionCode.toString(),
                         author     : moduleAuthor,
-                        description: moduleDescription + " " + ((flavorLowered == "zygisk") ?
-                                "This module requires Magisk 24.0+ and Zygisk enabled. DO NOT add SystemUI and Settings to DenyList." :
-                                "This module requires Riru $moduleMinRiruVersionName or above."),
-                        updateJson : (flavorLowered == "zygisk") ?
-                                "https://rikkaapps.github.io/release/sui_zygisk.json" :
-                                "https://rikkaapps.github.io/release/sui_riru.json",
+                        description: moduleDescription + " requires Zygisk enabled. DO NOT add SystemUI and Settings to DenyList."
+                        updateJson : "https://rikkaapps.github.io/release/sui_zygisk.json",
                 ])
                 filter(FixCrLfFilter.class,
                         eol: FixCrLfFilter.CrLf.newInstance("lf"))

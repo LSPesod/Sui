@@ -38,7 +38,6 @@
 
 #include "android.h"
 #include "logging.h"
-#include "riru.h"
 #include "misc.h"
 #include "dex_file.h"
 #include "bridge_service.h"

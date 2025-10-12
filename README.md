@@ -63,7 +63,7 @@ Clone with `git clone --recurse-submodules`.
 
 Gradle tasks:
 
-`Flavor` could be `Riru` and `Zygisk`, and `BuildType` could be `Debug` and `Release`.
+`Flavor` could be `Zygisk`, and `BuildType` could be `Debug` and `Release`.
 
 * `:module:assemble<Flavor><BuildType>`
 
@@ -83,7 +83,7 @@ Gradle tasks:
 
 ## Internals
 
-Sui requires [Magisk](https://github.com/topjohnwu/Magisk) (and [Riru](https://github.com/RikkaApps) for non-Zygisk version). Magisk allows us to run processes as uid 0 and a "do anything" SELinux context. Riru or Zygisk allows us to inject into system server process and app processes.
+Sui requires Zygisk enabled. Magisk allows us to run processes as uid 0 and a "do anything" SELinux context. Zygisk allows us to inject into system server process and app processes.
 
 In short, there are four parts:
 
