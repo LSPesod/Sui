@@ -67,7 +67,7 @@ dependencies {
 
     implementation 'dev.rikka.ndk.thirdparty:cxx:1.2.0'
     implementation 'dev.rikka.ndk.thirdparty:nativehelper:1.0.1'
-    implementation 'dev.rikka.rikkax.parcelablelist:parcelablelist:2.0.0'
+    implementation 'dev.rikka.rikkax.parcelablelist:parcelablelist:2.0.1'
 
     implementation "androidx.annotation:annotation:1.3.0"
     implementation 'androidx.core:core:1.17.0'
