@@ -7,7 +7,7 @@ message("Build type: ${CMAKE_BUILD_TYPE} ${FLAVOR}")
 set(CMAKE_CXX_STANDARD 17)
 
 set(LINKER_FLAGS "-ffixed-x18 -Wl,--hash-style=both")
-set(C_FLAGS "-Werror=format -fdata-sections -ffunction-sections -fno-exceptions -fno-rtti -fno-threadsafe-statics")
+set(C_FLAGS "-Werror=format -fdata-sections -ffunction-sections -fno-rtti -fno-threadsafe-statics")
 
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(C_FLAGS "${C_FLAGS} -O2 -fvisibility=hidden -fvisibility-inlines-hidden")
