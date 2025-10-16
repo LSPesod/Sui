@@ -90,31 +90,40 @@ afterEvaluate {
 
         if (variant.getBuildType().isMinifyEnabled()) {
             def processResourcesTask = tasks.getByName("process${variantCapped}Resources")
-            def optimizeResourceTask = task("optimize${variantCapped}Resources").doLast {
-                def aapt2 = Paths.get(project.android.sdkDirectory.path, 'build-tools', project.android.buildToolsVersion, 'aapt2')
-                def zip = Paths.get(project.buildDir.path, 'intermediates',
-                        'processed_res', variantLowered, 'out', "resources-${variantLowered}.ap_")
-                def map = Paths.get(project.buildDir.path, 'outputs',
-                        'mapping', variantLowered, 'resources.txt')
-                Files.createDirectories(map.getParent())
-                def optimized = new File("${zip}.opt")
-                def cmd = exec {
-                    commandLine aapt2, 'optimize', '--collapse-resource-names',
-                            '--shorten-resource-paths',
-                            '--resources-config-path', 'aapt2-resources.cfg',
-                            '--resource-path-shortening-map', map,
-                            '-o', optimized, zip
-                    ignoreExitValue false
+            def taskName = "optimize${variantCapped}Resources"
+            
+            // Only create the task if it doesn't already exist
+            if (!tasks.findByPath(taskName)) {
+                def optimizeResourceTask = tasks.create(name: taskName, type: DefaultTask) {
+                    doLast {
+                        def aapt2 = Paths.get(project.android.sdkDirectory.path, 'build-tools', project.android.buildToolsVersion, 'aapt2')
+                        def zip = Paths.get(project.buildDir.path, 'intermediates',
+                                'processed_res', variantLowered, 'out', "resources-${variantLowered}.ap_")
+                        def map = Paths.get(project.buildDir.path, 'outputs',
+                                'mapping', variantLowered, 'resources.txt')
+                        Files.createDirectories(map.getParent())
+                        def optimized = new File("${zip}.opt")
+                        def cmd = exec {
+                            commandLine aapt2, 'optimize', '--collapse-resource-names',
+                                    '--shorten-resource-paths',
+                                    '--resources-config-path', 'aapt2-resources.cfg',
+                                    '--resource-path-shortening-map', map,
+                                    '-o', optimized, zip
+                            ignoreExitValue false
+                        }
+                        if (cmd.exitValue == 0) {
+                            delete(zip)
+                            optimized.renameTo("$zip")
+                        }
+                    }
+                    
+                    onlyIf {
+                        !processResourcesTask.state.upToDate
+                    }
                 }
-                if (cmd.exitValue == 0) {
-                    delete(zip)
-                    optimized.renameTo("$zip")
-                }
+                
+                processResourcesTask.finalizedBy(optimizeResourceTask)
             }
-            optimizeResourceTask.onlyIf {
-                !processResourcesTask.state.upToDate
-            }
-            processResourcesTask.finalizedBy(optimizeResourceTask)
         }
     }
 }
