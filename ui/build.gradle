@@ -62,7 +62,7 @@ dependencies {
     compileOnly libs.hidden.stub
     implementation 'dev.rikka.rikkax.parcelablelist:parcelablelist:2.0.1'
 
-    implementation 'dev.rikka.rikkax.appcompat:appcompat:1.2.0-rc01'
+    implementation 'dev.rikka.rikkax.appcompat:appcompat:1.6.1'
     implementation 'dev.rikka.rikkax.material:material:1.6.6'
     implementation 'dev.rikka.rikkax.insets:insets:1.3.0'
     implementation 'dev.rikka.rikkax.lifecycle:lifecycle-resource-livedata:1.0.0'
