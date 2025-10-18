@@ -13,12 +13,6 @@ idea.module {
     resourceDirs += file('scripts')
 }
 
-android {
-    defaultConfig {
-        ndkVersion "29.0.13113456"
-    }
-}
-
 subprojects {
     plugins.withId("com.android.base") {
         plugins.apply('dev.rikka.tools.refine')
