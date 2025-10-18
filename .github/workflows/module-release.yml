@@ -1,0 +1,88 @@
+name: Module Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**/README.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.head_commit.message, '[skip ci]') }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            !~/.gradle/caches/build-cache-*
+          key: gradle-deps-module-${{ hashFiles('**/build.gradle') }}
+          restore-keys: |
+            gradle-deps
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            !~/.gradle/caches/build-cache-*
+          key: gradle-deps-module-${{ hashFiles('**/build.gradle') }}
+          restore-keys: |
+            gradle-deps
+
+      - name: Cache Ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}-ccache-cache-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-ccache-cache-
+
+      - name: Install ccache
+        run: |
+          sudo apt-get install -y ccache
+          ccache -o max_size=2G
+          ccache -o hash_dir=false
+
+      - name: Build with Gradle
+        run: |
+          mkdir -p ~/.gradle/wrapper
+          mkdir -p ~/.gradle/caches
+          [ $(du -s ~/.gradle/wrapper | awk '{ print $1 }') -gt 250000 ] && rm -rf ~/.gradle/wrapper/* || true
+          find ~/.gradle/caches -exec touch -d "2 days ago" {} + || true
+          echo 'org.gradle.caching=true' >> gradle.properties
+          echo 'org.gradle.parallel=true' >> gradle.properties
+          echo 'org.gradle.vfs.watch=true' >> gradle.properties
+          echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
+          ./gradlew zipZygiskRelease
+
+      - name: Prepare artifact
+        if: success()
+        id: prepareArtifact
+        run: |
+          zygiskReleaseName=`ls out/sui-zygisk-*-release.zip | awk -F '(/|.zip)' '{print $2}'` && echo "::set-output name=zygiskReleaseName::$zygiskReleaseName"
+          unzip out/sui-zygisk-*-release.zip -d sui-zygisk-release
+
+      - name: Upload Zygisk release
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.prepareArtifact.outputs.zygiskReleaseName }}
+          path: './sui-zygisk-release/*'
