@@ -1,4 +1,4 @@
-name: Module
+name: Module Debug
 
 on:
   workflow_dispatch:
