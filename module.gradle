@@ -6,10 +6,10 @@ ext {
 
     moduleLibraryName = "sui"
 
-    zygiskModuleId = "zygisk-sui"
+    zygiskModuleId = "zygisk_sui"
 
     moduleName = "Sui"
-    moduleAuthor = "Rikka"
+    moduleAuthor = "Rikka & baaad"
     moduleDescription = "Modern superuser interface implementation."
     moduleVersionMinor = 5
     moduleVersionPatch = 1
