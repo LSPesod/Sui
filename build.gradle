@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application' version '8.13.0' apply false
+    id 'com.android.application' version '8.10.0' apply false
     id 'com.android.library' version '8.10.0' apply false
     id 'org.jetbrains.kotlin.jvm' version '2.2.20' apply false
     alias libs.plugins.refine apply false
@@ -44,5 +44,4 @@ ext {
     targetSdkVersion = 36
     api_min_sdk = 23
     api_target_sdk = 36
-    ndkVersion = "29.0.13113456"
 }

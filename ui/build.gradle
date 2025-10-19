@@ -18,7 +18,6 @@ android {
         versionCode gitCommitCount
         versionName moduleVersion.substring(1)
         resConfigs 'en', 'zh', 'zh-rCN', 'zh-rTW'
-        ndkVersion rootProject.ext.ndkVersion
     }
     buildFeatures {
         viewBinding true

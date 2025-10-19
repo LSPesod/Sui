@@ -18,7 +18,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode gitCommitCount
         versionName moduleVersion.substring(1)
-        ndkVersion rootProject.ext.ndkVersion
     }
     buildFeatures {
         viewBinding true
